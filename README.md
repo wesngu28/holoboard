@@ -1,34 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Holoboard
 
-## Getting Started
+A mixture of one of my creative projects for CSE154 and a project I made independently after the class ended. This was a small little project I made spotaneously to learn some of the Next 13 update.
 
-First, run the development server:
+Third-party viewer and live tracker for the Hololive and Holostars English members. When one of them are live, their icon will light up and you can click on it to get the current stream in the iframe. I may implement Google Authentication to allow you to send chat messages through your Google Account.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Some things I learned about Next 13:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. It seems like you really need to consider whether or not you want to use a server or client component as they now have clearly defined roles. This particular app doesn't use much components in general but I already had to split some functionality in order to use client component specific functions within a parent server component.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. useSWR seems to not work at the moment? All my calls with it failed.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Background
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The creative project specifically asked us to create our own API and make use of it through Javascript. At the time, I was unaware JSON could support arrays and only know basic Vanilla Javascript. The other project was a more multi-purpose app that allowed you to add channels and track their live status through the YouTube API with additional support for those supported by the Holodex API, but I never polished or was proud of it because it used local storage and was extremely buggy. For this, I extracted portions of the Holodex portion, but I plan to turn that app into a real app with user authentication and a database eventually.
