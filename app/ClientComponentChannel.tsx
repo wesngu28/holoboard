@@ -17,7 +17,7 @@ export function ClientComponentChannel({ channel, image, data }: Props) {
 
     return (
         <div className='relative h-[6vw] w-[6vw]'>
-            <Image onClick={() => videoContext?.setVideo(data)} className={data.status === 'live' ? 'opacity-100' : 'opacity-50'} src={image} alt={channel.name} />
+            <Image onClick={() => videoContext?.setVideo(data)} className={data.status === 'live' ? 'opacity-100' : data.status === 'upcoming' ? 'opacity-60' : 'opacity-25'} src={image} alt={channel.name} />
         </div>
     );
 
