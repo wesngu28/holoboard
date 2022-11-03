@@ -1,5 +1,5 @@
 export interface VideoStatus {
-    id: string
+    id?: string
     status: string
     video: string
 }
