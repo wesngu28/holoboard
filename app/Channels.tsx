@@ -23,6 +23,7 @@ export function Channels() {
     return (
         <div className={`flex items-center justify-center flex-wrap absolute bottom-4`}>
             {channels.map((channel: ChannelObj, i: number) => (
+                {/* @ts-expect-error Server Component */}
                 <Channel key={channel.id} channel={channel} image={images[i]}/>
             ))}
         </div>
