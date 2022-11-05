@@ -1,5 +1,5 @@
-import { ChannelObj } from "../models/Channel";
-import channels from "../assets/holoen.json"
+import { ChannelObj } from '../models/Channel'
+import channels from '../assets/holoen.json'
 import ame from '../public/amelia.jpg'
 import calli from '../public/calliope.jpg'
 import gura from '../public/gura.jpg'
@@ -15,20 +15,35 @@ import altare from '../public/regis.jpg'
 import axel from '../public/axel.jpg'
 import dez from '../public/magni.jpg'
 import vesper from '../public/vesper.jpg'
-import { Channel } from "./Channel";
+import { Channel } from './Channel'
 
 export function Channels() {
-    const images = [ame, calli, gura, ina, kiara, irys, bae, fauna, kronii, mumei, sana, altare, axel, dez, vesper]
+  const images = [
+    ame,
+    calli,
+    gura,
+    ina,
+    kiara,
+    irys,
+    bae,
+    fauna,
+    kronii,
+    mumei,
+    sana,
+    altare,
+    axel,
+    dez,
+    vesper,
+  ]
 
-    return (
-        <div className={`flex items-center justify-center flex-wrap absolute bottom-4`}>
-            {channels.map((channel: ChannelObj, i: number) => (
-                <div key={channel.id}>
-                    {/* @ts-expect-error Server Component */}
-                    <Channel channel={channel} image={images[i]}/>
-                </div>
-            ))}
+  return (
+    <div className={`flex items-center justify-center flex-wrap absolute bottom-4`}>
+      {channels.map((channel: ChannelObj, i: number) => (
+        <div key={channel.id}>
+          {/* @ts-expect-error Server Component */}
+          <Channel channel={channel} image={images[i]} />
         </div>
-    );
-
+      ))}
+    </div>
+  )
 }

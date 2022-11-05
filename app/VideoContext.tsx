@@ -1,25 +1,27 @@
-'use client';
+'use client'
 
-import { createContext, useState } from "react";
-import { VideoStatus } from "../models/VideoStatus";
+import { createContext, useState } from 'react'
+import { VideoStatus } from '../models/VideoStatus'
 
 type VideoContextProviderProps = {
   children: React.ReactNode
 }
 
 type VideoContextType = {
-  video: VideoStatus,
+  video: VideoStatus
   setVideo: React.Dispatch<React.SetStateAction<VideoStatus>>
 }
 
 const defaultVideo = {
   status: 'live',
-  video: 'NqzUaMtF4eo'
+  video: 'NqzUaMtF4eo',
 }
 
 export const VideoContext = createContext<VideoContextType | null>(null)
 
-export const VideoContextProvider = ({children}: VideoContextProviderProps) => {
+export const VideoContextProvider = ({ children }: VideoContextProviderProps) => {
   const [video, setVideo] = useState<VideoStatus>(defaultVideo)
-  return <VideoContext.Provider value={{video, setVideo}}>{children}</VideoContext.Provider>
+  return (
+    <VideoContext.Provider value={{ video, setVideo }}>{children}</VideoContext.Provider>
+  )
 }
