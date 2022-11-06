@@ -23,7 +23,7 @@ export function ClientComponentChannel({ channel, image, ssrdata }: Props) {
 
   const { data, error } = useSWR(channel.id, swrFetch, {
     refreshInterval: 60000,
-    revalidateOnFocus: false,
+    revalidateOnFocus: true,
   })
 
   return (
