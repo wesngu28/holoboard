@@ -13,7 +13,10 @@ import altare from "../public/regis.jpg";
 import axel from "../public/axel.jpg";
 import dez from "../public/magni.jpg";
 import vesper from "../public/vesper.jpg";
-
+import bettel from "../public/bettel.jpg";
+import flayon from "../public/flayon.jpg";
+import hakka from "../public/hakka.jpg";
+import josuiji from "../public/josuiji.jpg";
 export const useImage = [
   ame,
   calli,
@@ -30,4 +33,8 @@ export const useImage = [
   axel,
   dez,
   vesper,
+  bettel,
+  flayon,
+  hakka,
+  josuiji
 ]
