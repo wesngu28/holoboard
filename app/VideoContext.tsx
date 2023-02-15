@@ -14,7 +14,7 @@ type VideoContextType = {
 
 const defaultVideo = {
   status: '',
-  video: 'NqzUaMtF4eo'
+  video: 't8Za0T1T8M'
 }
 
 export const VideoContext = createContext<VideoContextType | null>(null)
