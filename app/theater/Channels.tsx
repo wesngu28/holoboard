@@ -2,22 +2,23 @@
 
 import { ChannelObj } from '../../models/Channel'
 import channels from '../../assets/holoen.json'
-import { Channel } from './Channel'
 import { useImage } from '../imageArray'
 import useSWR from 'swr'
 import { VideoStatus } from '../../models/VideoStatus'
+import Image from 'next/image'
 
-export function Channels() {
+interface Props { setVid: (video: VideoStatus) => void}
+export function Channels({setVid}: Props) {
   const images = useImage
-  // const { data, error } = useSWR(
-  //   'http://localhost:3000/api/tracker',
-  //   async () => {
-  //     const infos = await fetch('http://localhost:3000/api/tracker', { cache: "no-cache" });
-  //     const infosJson: VideoStatus[] = await infos.json();
-  //     return infosJson;
-  //   },
-  //   { refreshInterval: 60000 }
-  // );
+  const { data, error } = useSWR(
+    'http://localhost:3000/api/tracker',
+    async () => {
+      const infos = await fetch('http://localhost:3000/api/tracker', { cache: "no-cache" });
+      const infosJson: VideoStatus[] = await infos.json();
+      return infosJson;
+    },
+    { refreshInterval: 60000 }
+  );
 
   return (
     !data ? <h2 className="text-lg font-semibold mt-4">Fetching data...</h2>
@@ -27,7 +28,23 @@ export function Channels() {
         let channelData = data.filter(status => status.id === channel.id)[0]
         return(
           <div key={channel.id}>
-            <Channel channel={channel} image={images[i]} data={channelData}/>
+            <Image
+              title={channelData.time}
+              onClick={() => setVid(channelData)}
+              className={
+                channelData.status === 'live'
+                  ? 'opacity-100'
+                  : channelData.time?.includes('minutes') && !channelData.time?.includes('hours')
+                  ? 'opacity-60'
+                  : channelData.time?.includes('hours')
+                  ? 'opacity-40'
+                  : channelData.time?.includes('days') && !channelData.time?.includes('hours')
+                  ? 'opacity-20'
+                  : 'opacity-10'
+              }
+              src={images[i]}
+              alt={channel.name}
+            />
           </div>
         )
       })}
