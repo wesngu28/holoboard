@@ -1,13 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { CronJob } from "cron";
 import { client } from "./client";
-// Cannot access ambient const enums when the '--isolatedModules' flag is provided.
-export interface VideoStatus {
-  id: string;
-  status: string;
-  video: string;
-  time?: string;
-}
+import { VideoStatus } from "../../models/VideoStatus";
 
 const ids: VideoStatus[] = [
   { id: "UCyl1z3jo3XHR1riLFKG5UAg", status: "", video: "", time: "" },
@@ -86,7 +80,7 @@ export const getLastVideo = async (id: string) => {
 };
 
 async function iterateAndUpdate() {
-  const queryLiveIds = ids.map(channel => channel.id)
+  const queryLiveIds = ids.map(channel => channel.id!)
   const liveUpcomingVideos = await client.getLiveVideosByChannelId(queryLiveIds)
   for (const id of ids) {
     const thisLiveUpcoming = liveUpcomingVideos.filter(videos => videos.channelId === id.id)
@@ -100,26 +94,21 @@ async function iterateAndUpdate() {
         finished = true
       }
       try {
-        const checkUpcoming = await getNearestStream(id.id);
+        const [checkUpcoming, lastVideo] = await Promise.all([
+          getNearestStream(id.id!),
+          getLastVideo(id.id!),
+        ]);
         if (checkUpcoming) {
           id.status = "upcoming";
           id.video = checkUpcoming.video;
           id.time = checkUpcoming.time;
           console.log("successfully got " + id.id + " with upcoming");
-          finished = true
-        }
-      } catch (err) {
-        console.log(
-          `Error of ${err} with ${id.id} while getting upcoming stream`
-        );
-      }
-      try {
-        const lastVideo = await getLastVideo(id.id);
-        if (lastVideo) {
+          finished = true;
+        } else if (lastVideo) {
           id.status = "offline";
           id.video = lastVideo;
           console.log("successfully got " + id.id + " with last");
-          finished = true
+          finished = true;
         }
       } catch (err) {
         console.log(`Error of ${err} with ${id.id} while getting last video`);

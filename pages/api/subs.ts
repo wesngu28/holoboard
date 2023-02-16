@@ -2,17 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { CronJob } from "cron";
 import { client } from "./client";
 import { getAverageColor } from "fast-average-color-node";
-
-export interface SubStatus {
-  id: string;
-  name: string,
-  group: string,
-  thumbnail: string;
-  color: string;
-  subs: number;
-  view_count: number;
-  video_count: number;
-}
+import { SubStatus } from "../../models/VideoStatus";
 
 const ids: SubStatus[] = [
   { id: "UCyl1z3jo3XHR1riLFKG5UAg", name: "Amelia Watson", group: "Myth", thumbnail: "", color: "", subs: 0, view_count: 0, video_count: 0 },

@@ -1,9 +1,7 @@
 "use client";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, Plugin } from 'chart.js';
-import { SubStatus } from "../../pages/api/subs";
-import { useImage } from "../imageArray";
-import { FastAverageColor } from "fast-average-color";
+import { SubStatus } from "../../models/VideoStatus";
 
 interface Props {
   datas: SubStatus[],
@@ -25,7 +23,6 @@ export default function LicensedBar({filter, datas}: Props) {
         for (let i = 0; i < yAxis.ticks.length; i++) {
           const img = new Image()
           img.src = reorderedDatas![i]!.thumbnail
-          let x = xAxis.getPixelForValue(i);
           ctx.drawImage(img, xAxis.left - 55, yAxis.getPixelForTick(i) -25, 50, 50);
         }
         ctx.restore();

@@ -31,16 +31,16 @@ async function iterateAndUpdate() {
 
 }
 
-async function startCron() {
-  await iterateAndUpdate();
-  job.start();
-}
+// async function startCron() {
+//   await iterateAndUpdate();
+//   job.start();
+// }
 
-const job = new CronJob("0 0/15 * * * *", async () => {
-  await iterateAndUpdate();
-});
+// const job = new CronJob("0 0/15 * * * *", async () => {
+//   await iterateAndUpdate();
+// });
 
-startCron();
+// startCron();
 
 const liveData = async (req: NextApiRequest, res: NextApiResponse) => {
   await iterateAndUpdate()
