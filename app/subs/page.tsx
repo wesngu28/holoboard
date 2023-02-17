@@ -1,9 +1,8 @@
 "use client";
 
 import useSWR from "swr";
-import Link from "next/link";
 import LicensedBar from "./Bar";
-import { useState } from "react";
+import { use, useState } from "react";
 import GraphFilter from "./GraphFilter";
 import { SubStatus } from "../../models/VideoStatus";
 
@@ -17,10 +16,9 @@ export default function Chart() {
     setGraphfilter(newFilter);
   };
 
-  const { data, error } = useSWR(
-    'http://localhost:3000/api/subs',
+  const { data, error } = useSWR('get subs',
     async () => {
-      const infos = await fetch('http://localhost:3000/api/subs', { cache: "no-cache" });
+      const infos = await fetch(`${process.env.SITE}/api/subs`, { cache: "no-cache" });
       const infosJson: SubStatus[] = await infos.json();
       return infosJson;
     },
@@ -29,16 +27,11 @@ export default function Chart() {
 
   return (
     <main className="p-2 min-h-screen flex-1 flex flex-col items-center justify-center">
-      <Link href={"/"}>
-        <p className="text-2xl font-semibold tracking-tight">
-          Visit the Theater 🍿
-        </p>
-      </Link>
       {!data ? <h2 className="text-lg font-semibold mt-4">Fetching data...</h2>
       : error ? <h2 className="text-lg font-semibold mt-4">Failed to fetch information</h2>
-      : <div className="max-w-2xl">
+      : <div className="w-full sm:max-w-xl lg:max-w-3xl xl:max-w-6xl">
         <GraphFilter onChange={handleGraphOptionChange} onCheckBox={handleCheckBox} setProp={groupfilter}/>
-        <div className="h-[1250px] max-w-3xl mt-4 p-4 bg-gray-900 rounded-lg shadow flex flex-col justify-center">
+        <div className="h-[1250px] mt-4 p-4 bg-gray-900 rounded-lg shadow flex flex-col justify-center relative">
           <LicensedBar
             filter={graphfilter}
             datas={
