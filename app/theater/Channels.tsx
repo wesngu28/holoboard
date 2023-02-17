@@ -8,10 +8,9 @@ import Image from 'next/image'
 
 interface Props { setVid: (video: VideoStatus) => void}
 export function Channels({setVid}: Props) {
-  const { data, error } = useSWR(
-    'http://localhost:3000/api/tracker',
+  const { data, error } = useSWR("get channel",
     async () => {
-      const infos = await fetch('http://localhost:3000/api/tracker', { cache: "no-cache" });
+      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/tracker`, { cache: "no-cache" });
       const infosJson: VideoStatus[] = await infos.json();
       return infosJson;
     },

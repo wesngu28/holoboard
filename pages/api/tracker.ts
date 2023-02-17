@@ -26,74 +26,66 @@ const ids: VideoStatus[] = [
 ];
 
 export const getNearestStream = async (id: string) => {
-  try {
-    const response = await fetch(
-      `https://holodex.net/api/v2/videos?channel_id=${id}&status=upcoming&type=stream&max_upcoming_hours=48`,
-      {
-        cache: "no-store",
-        headers: {
-          "x-api-key": process.env.HOLODEX_API!,
-        },
-      }
-    );
-    const getNearestStreamJson = await response.json();
-    if (getNearestStreamJson[0]) {
-      const nextStream = getNearestStreamJson[getNearestStreamJson.length - 1];
-      const dater = new Date(nextStream.available_at);
-      let timeUntil = (dater.getTime() - Date.now()) / 1000;
-      let humanReadable = "";
-      const days = Math.floor(timeUntil / 86400);
-      timeUntil %= 86400;
-      const hours = Math.floor(timeUntil / 3600);
-      timeUntil %= 3600;
-      const minutes = Math.floor(timeUntil / 60);
-      timeUntil %= 60;
-      const seconds = Math.floor(timeUntil);
-      if (days > 0) humanReadable += `${days} days `;
-      if (hours > 0) humanReadable += `${hours} hours `;
-      if (minutes > 0) humanReadable += `${minutes} minutes `;
-      if (seconds > 0) humanReadable += `${seconds} seconds `;
-      humanReadable += "until next stream";
-      return { video: nextStream.id, time: humanReadable };
+  const response = await fetch(
+    `https://holodex.net/api/v2/videos?channel_id=${id}&status=upcoming&type=stream&max_upcoming_hours=48`,
+    {
+      cache: "no-store",
+      headers: {
+        "x-api-key": process.env.HOLODEX_API!,
+      },
     }
-  } catch (err) {
-    console.log("Error getting next stream for " + id);
+  );
+  const getNearestStreamJson = await response.json();
+  if (getNearestStreamJson[0]) {
+    const nextStream = getNearestStreamJson[getNearestStreamJson.length - 1];
+    const dater = new Date(nextStream.available_at);
+    let timeUntil = (dater.getTime() - Date.now()) / 1000;
+    let humanReadable = "";
+    const days = Math.floor(timeUntil / 86400);
+    timeUntil %= 86400;
+    const hours = Math.floor(timeUntil / 3600);
+    timeUntil %= 3600;
+    const minutes = Math.floor(timeUntil / 60);
+    timeUntil %= 60;
+    const seconds = Math.floor(timeUntil);
+    if (days > 0) humanReadable += `${days} days `;
+    if (hours > 0) humanReadable += `${hours} hours `;
+    if (minutes > 0) humanReadable += `${minutes} minutes `;
+    if (seconds > 0) humanReadable += `${seconds} seconds `;
+    humanReadable += "until next stream";
+    return { video: nextStream.id, time: humanReadable };
   }
 };
 
 export const getLastVideo = async (id: string) => {
-  try {
-    const latestVideo = await fetch(
-      `https://holodex.net/api/v2/videos?channel_id=${id}&status=past&type=stream`,
-      {
-        cache: "no-store",
-        headers: {
-          "x-api-key": process.env.HOLODEX_API!,
-        },
-      }
-    );
-    const latestVideoJson = await latestVideo.json();
-    return latestVideoJson[0].id;
-  } catch (err) {
-    console.log("Error getting last video for " + id);
-  }
+  const latestVideo = await fetch(
+    `https://holodex.net/api/v2/videos?channel_id=${id}&status=past&type=stream`,
+    {
+      cache: "no-store",
+      headers: {
+        "x-api-key": process.env.HOLODEX_API!,
+      },
+    }
+  );
+  const latestVideoJson = await latestVideo.json();
+  return latestVideoJson[0].id;
 };
 
 async function iterateAndUpdate() {
-  const queryLiveIds = ids.map(channel => channel.id!)
-  const liveUpcomingVideos = await client.getLiveVideosByChannelId(queryLiveIds)
-  for (const id of ids) {
-    const thisLiveUpcoming = liveUpcomingVideos.filter(videos => videos.channelId === id.id)
-    const hasLiveStatus = thisLiveUpcoming.find(video => video.status === 'live');
-    let finished = false;
-    while (!finished) {
-      if (hasLiveStatus) {
-        id.status = "live";
-        id.video = hasLiveStatus.videoId;
-        console.log("successfully got " + id.id + " with live");
-        finished = true
-      }
-      try {
+  try {
+    const queryLiveIds = ids.map(channel => channel.id!)
+    const liveUpcomingVideos = await client.getLiveVideosByChannelId(queryLiveIds)
+
+    for (const id of ids) {
+      const thisLiveUpcoming = liveUpcomingVideos.filter(videos => videos.channelId === id.id)
+      const hasLiveStatus = thisLiveUpcoming.find(video => video.status === 'live');
+      let finished = false;
+      while (!finished) {
+        if (hasLiveStatus) {
+          id.status = "live";
+          id.video = hasLiveStatus.videoId;
+          finished = true
+        }
         const [checkUpcoming, lastVideo] = await Promise.all([
           getNearestStream(id.id!),
           getLastVideo(id.id!),
@@ -102,45 +94,34 @@ async function iterateAndUpdate() {
           id.status = "upcoming";
           id.video = checkUpcoming.video;
           id.time = checkUpcoming.time;
-          console.log("successfully got " + id.id + " with upcoming");
           finished = true;
         } else if (lastVideo) {
           id.status = "offline";
           id.video = lastVideo;
-          console.log("successfully got " + id.id + " with last");
           finished = true;
         }
-      } catch (err) {
-        console.log(`Error of ${err} with ${id.id} while getting last video`);
       }
     }
+  } catch (err) {
+    console.log(`Error of ${err} while getting videos by channel ID`);
   }
 }
 
-// async function startCron() {
-//   await iterateAndUpdate();
-//   job.start();
-// }
+async function startCron() {
+  await iterateAndUpdate();
+  job.start();
+}
+const job = new CronJob("0 0/20 * * * *", async () => {
+  await iterateAndUpdate();
+});
+startCron();
 
-// const job = new CronJob("0 0/15 * * * *", async () => {
-//   await iterateAndUpdate();
-// });
-
-// startCron();
-
-let clients: { [key: string]: number } = {};
 const liveData = (req: NextApiRequest, res: NextApiResponse) => {
-  const ip = req.socket.remoteAddress;
-  if (!ip) return;
-  if (!clients[ip] || clients[ip] < 50) {
-    clients[ip] = clients[ip] ? clients[ip] + 1 : 1;
+  try {
     res.status(200).json(ids);
-  } else {
-    res.status(429).send("Too many requests. Please try again later.");
+  } catch(err) {
+    res.status(500).send("Failed to load data");
   }
-  setTimeout(() => {
-    clients = {};
-  }, 60000);
 };
 
 export default liveData;

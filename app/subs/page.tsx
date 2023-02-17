@@ -18,7 +18,7 @@ export default function Chart() {
 
   const { data, error } = useSWR('get subs',
     async () => {
-      const infos = await fetch(`${process.env.SITE}/api/subs`, { cache: "no-cache" });
+      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/subs`, { cache: "no-cache" });
       const infosJson: SubStatus[] = await infos.json();
       return infosJson;
     },
