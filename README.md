@@ -1,15 +1,33 @@
 # Holoboard
 
-Third-party viewer and live tracker for the Hololive and Holostars English members. When one of them are live, their icon will light up and you can click on it to get the current stream in the iframe.
+Third-party viewer and live tracker for the Hololive and Holostars English members. When one of them are live, their icon will light up and you can click on it to get the current stream in the iframe. You can also view a chart of their live subscriptions, views, and video count. The stats update daily, while the server will try and update live status every 20 minutes.
 
-Some things I learned about Next 13:
+I made Holoboard to learn about some of the new features that Vercel implemented in Next.js, including server and client components.
 
-1. It seems like you really need to consider whether or not you want to use a server or client component as they now have clearly defined roles. This particular app doesn't use much components in general but I already had to split some functionality in order to use client component specific functions within a parent server component.
+<img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white"> <img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white"> <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"> <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white"> <img src="https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white">
 
-2. Having to use a pages folder for api doesn't seem like an awkward change, maybe it will be changed later.
+## Running Locally
 
-## Background
+To run the project locally, follow these steps:
 
-This was a small little project I made spotaneously to learn some of the Next 13 update but also to slightly modernize one of my older projects. A mixture of one of my creative projects for CSE154 and a project I made independently after the class ended. CSE154 is the web development class at UW, and teaches you html/css and javascript up to async/await.
+1. Clone the repository to your local machine.
+2. Navigate to the root directory of the project.
+3. Run `npm install` to install the necessary dependencies.
+4. Follow steps provided [here](https://docs.holodex.net/docs/holodex/ZG9jOjQ2Nzk1-getting-started) to acquire an api key, then make a .env.local in the root folder.
+```sh
+HOLODEX_API=Keyyoujustmade
+NEXT_PUBLIC_SITE=http://localhost:3000
+NEXT_PUBLIC_DOMAIN=localhost
+```
+5. Run `npm run dev` to start the development server.
+6. Visit `http://localhost:3000` in your web browser to view the application.
 
-The creative project specifically asked us to create our own API with express and make use of it through Javascript. At the time, I was unaware JSON could support arrays and only knew basic Vanilla Javascript. The other project was a more multi-purpose app that allowed you to add channels and track their live status through the YouTube API with additional support for those supported by the Holodex API, but I never polished or was proud of it because it used local storage and was extremely buggy. For this, I extracted portions of the Holodex portion, but I plan to turn that app into a real app with user authentication and a database eventually.
+## 💻 Technologies
+
+- Next.js: a JavaScript framework for building server-rendered or statically-exported applications using React. Using the backend server layer provided by their apis, I am able to run cronjobs that update an in-memory data store through a Next.js backend.
+- Tailwind: a CSS utility class library to quicken and bootstrap development of appealing and accessible websites.
+- Chart.js: A Javascript library for making beautiful and customizable data visualizations.
+
+## Notes
+
+An older rendition of this project used useContext, but I have since swapped it for just lifting state up. I ran into issues with the "Cannot access ambient const enums when the '--isolatedModules' flag is provided." error, so was only able

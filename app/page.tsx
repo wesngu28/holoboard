@@ -12,11 +12,11 @@ export default function Chart() {
 
   const { data, error } = useSWR("get lives",
     async () => {
-      const infos = await fetch(`${process.env.SITE}/api/tracker`, { cache: "no-cache" });
+      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/tracker`, { cache: "no-cache" });
       const infosJson: VideoStatus[] = await infos.json();
       return infosJson;
     },
-    { refreshInterval: 90000 }
+    { refreshInterval: 43200000 }
   );
 
   return (
