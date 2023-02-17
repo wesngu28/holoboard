@@ -22,19 +22,18 @@ export default function LicensedBar({filter, datas}: Props) {
         let yAxis = chart.scales.y;
         for (let i = 0; i < yAxis.ticks.length; i++) {
           const img = new Image()
-          img.src = reorderedDatas![i]!.thumbnail
+          img.src = `/${reorderedDatas[i]?.name}.jpg`
           ctx.drawImage(img, xAxis.left - 55, yAxis.getPixelForTick(i) -25, 50, 50);
         }
         ctx.restore();
       }
-    }
-  ;
+    };
 
   ChartJS.register(ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement, [plugins]);
   return (
     <Bar
       data={{
-        labels: datas.map((data: any) => data.name),
+        labels: datas.map((data) => data.name),
         datasets: [
           {
             data: datas.map((data: any) => data[filter]),
@@ -43,7 +42,6 @@ export default function LicensedBar({filter, datas}: Props) {
           },
         ],
       }}
-
       options={{
         responsive: true,
         maintainAspectRatio: false,

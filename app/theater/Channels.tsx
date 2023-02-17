@@ -2,14 +2,12 @@
 
 import { ChannelObj } from '../../models/Channel'
 import channels from '../../assets/holoen.json'
-import { useImage } from '../imageArray'
 import useSWR from 'swr'
 import { VideoStatus } from '../../models/VideoStatus'
 import Image from 'next/image'
 
 interface Props { setVid: (video: VideoStatus) => void}
 export function Channels({setVid}: Props) {
-  const images = useImage
   const { data, error } = useSWR(
     'http://localhost:3000/api/tracker',
     async () => {
@@ -42,8 +40,9 @@ export function Channels({setVid}: Props) {
                   ? 'opacity-20'
                   : 'opacity-10'
               }
-              src={images[i]}
+              src={`/${channel.name}.jpg`}
               alt={channel.name}
+              width={800} height={800}
             />
           </div>
         )

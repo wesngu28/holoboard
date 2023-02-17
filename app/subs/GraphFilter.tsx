@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 
 interface Props {
@@ -12,9 +13,8 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
   const [allChecked, setAllChecked] = useState(false);
   useEffect(() => {
     for (let i = 0; i < checkboxIds.length; i++) {
-      checkboxes.current[i].checked = !checkboxes.current[i].checked;
+      checkboxes.current[i].checked = true;
     };
-
   }, [checkboxIds])
   function selectAll() {
     setAllChecked(!allChecked);
@@ -54,8 +54,11 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
   return (
     <>
       <div className="flex justify-between w-full">
-        <button onClick={selectAll}>Select All !! :D</button>
-        <select>
+        <button className="bg-red-700 rounded-md drop-shadow-md p-2" onClick={selectAll}>Select All</button>
+        <Link className="fill-white p-4 hover:cursor-pointer" href={'/'}>
+          <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+        </Link>
+        <select className="p-4">
           <option onClick={() => onChange("subs")}>Subscribers</option>
           <option onClick={() => onChange("video_count")}>Videos</option>
           <option onClick={() => onChange("view_count")}>Views</option>
