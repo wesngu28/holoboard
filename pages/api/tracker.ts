@@ -1,35 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { CronJob } from "cron";
 import { client } from "./client";
 import { VideoStatus } from "../../models/VideoStatus";
-
-const ids: VideoStatus[] = [
-  { id: "UCyl1z3jo3XHR1riLFKG5UAg", status: "", video: "", time: "" },
-  { id: "UCL_qhgtOy0dy1Agp8vkySQg", status: "", video: "", time: "" },
-  { id: "UCoSrY_IQQVpmIRZ9Xf-y93g", status: "", video: "", time: "" },
-  { id: "UCMwGHR0BTZuLsmjY_NT5Pwg", status: "", video: "", time: "" },
-  { id: "UCHsx4Hqa-1ORjQTh9TYDhww", status: "", video: "", time: "" },
-  { id: "UC8rcEBzJSleTkf_-agPM20g", status: "", video: "", time: "" },
-  { id: "UCgmPnx-EEeOrZSg5Tiw7ZRQ", status: "", video: "", time: "" },
-  { id: "UCO_aKKYxn4tvrqPjcTzZ6EQ", status: "", video: "", time: "" },
-  { id: "UCmbs8T6MWqUHP1tIQvSgKrg", status: "", video: "", time: "" },
-  { id: "UC3n5uGu18FoCy23ggWWp8tA", status: "", video: "", time: "" },
-  { id: "UCsUj0dszADCGbF3gNrQEuSQ", status: "", video: "", time: "" },
-  { id: "UCyxtGMdWlURZ30WSnEjDOQw", status: "", video: "", time: "" },
-  { id: "UC2hx0xVkMoHGWijwr_lA01w", status: "", video: "", time: "" },
-  { id: "UC7MMNHR-kf9EN1rXiesMTMw", status: "", video: "", time: "" },
-  { id: "UCDRWSO281bIHYVi-OV3iFYA", status: "", video: "", time: "" },
-  { id: "UCHP4f7G2dWD4qib7BMatGAw", status: "", video: "", time: "" },
-  { id: "UC060r4zABV18vcahAWR1n7w", status: "", video: "", time: "" },
-  { id: "UC7gxU6NXjKF1LrgOddPzgTw", status: "", video: "", time: "" },
-  { id: "UCMqGG8BRAiI1lJfKOpETM_w", status: "", video: "", time: "" },
-];
 
 export const getNearestStream = async (id: string) => {
   const response = await fetch(
     `https://holodex.net/api/v2/videos?channel_id=${id}&status=upcoming&type=stream&max_upcoming_hours=48`,
     {
-      cache: "no-store",
       headers: {
         "x-api-key": process.env.HOLODEX_API!,
       },
@@ -61,7 +37,6 @@ export const getLastVideo = async (id: string) => {
   const latestVideo = await fetch(
     `https://holodex.net/api/v2/videos?channel_id=${id}&status=past&type=stream`,
     {
-      cache: "no-store",
       headers: {
         "x-api-key": process.env.HOLODEX_API!,
       },
@@ -71,54 +46,38 @@ export const getLastVideo = async (id: string) => {
   return latestVideoJson[0].id;
 };
 
-async function iterateAndUpdate() {
-  try {
-    const queryLiveIds = ids.map(channel => channel.id!)
-    const liveUpcomingVideos = await client.getLiveVideosByChannelId(queryLiveIds)
-
-    for (const id of ids) {
-      const thisLiveUpcoming = liveUpcomingVideos.filter(videos => videos.channelId === id.id)
-      const hasLiveStatus = thisLiveUpcoming.find(video => video.status === 'live');
-      let finished = false;
-      while (!finished) {
-        if (hasLiveStatus) {
-          id.status = "live";
-          id.video = hasLiveStatus.videoId;
-          finished = true
-        }
-        const [checkUpcoming, lastVideo] = await Promise.all([
-          getNearestStream(id.id!),
-          getLastVideo(id.id!),
-        ]);
-        if (checkUpcoming) {
-          id.status = "upcoming";
-          id.video = checkUpcoming.video;
-          id.time = checkUpcoming.time;
-          finished = true;
-        } else if (lastVideo) {
-          id.status = "offline";
-          id.video = lastVideo;
-          finished = true;
-        }
+export async function getLiveData(channels: string[]): Promise<VideoStatus[]> {
+  const liveUpcomingVideos = await client.getLiveVideosByChannelId(channels)
+  const renderedDataArray = [] as VideoStatus[]
+  for (const channel of channels) {
+    const thisLiveUpcoming = liveUpcomingVideos.filter(videos => videos.channelId === channel)
+    const hasLiveStatus = thisLiveUpcoming.find(video => video.status === 'live');
+    const vsChannel = { id: channel } as VideoStatus
+    if (hasLiveStatus) {
+      vsChannel.status = "live";
+      vsChannel.video = hasLiveStatus.videoId;
+    } else {
+      const [checkUpcoming, lastVideo] = await Promise.all([
+        getNearestStream(vsChannel.id!),
+        getLastVideo(vsChannel.id!),
+      ]);
+      if (checkUpcoming) {
+        vsChannel.status = "upcoming";
+        vsChannel.video = checkUpcoming.video;
+        vsChannel.time = checkUpcoming.time;
+      } else if (lastVideo) {
+        vsChannel.status = "offline";
+        vsChannel.video = lastVideo;
       }
     }
-  } catch (err) {
-    console.log(`Error of ${err} while getting videos by channel ID`);
+    renderedDataArray.push(vsChannel)
   }
+  return renderedDataArray
 }
 
-async function startCron() {
-  await iterateAndUpdate();
-  job.start();
-}
-const job = new CronJob("0 0/20 * * * *", async () => {
-  await iterateAndUpdate();
-});
-startCron();
-
-const liveData = (req: NextApiRequest, res: NextApiResponse) => {
+const liveData = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    res.status(200).json(ids);
+    res.status(200).json(await getLiveData(JSON.parse(req.body)));
   } catch(err) {
     res.status(500).send("Failed to load data");
   }

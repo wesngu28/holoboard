@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import LicensedBar from "./Bar";
-import { use, useState } from "react";
+import { useState } from "react";
 import GraphFilter from "./GraphFilter";
 import { SubStatus } from "../../models/VideoStatus";
 
@@ -18,11 +18,14 @@ export default function Chart() {
 
   const { data, error } = useSWR('get subs',
     async () => {
-      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/subs`, { cache: "no-cache" });
+      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/subs`, {
+        cache: "no-store",
+      });
       const infosJson: SubStatus[] = await infos.json();
+      console.log(infosJson)
       return infosJson;
     },
-    { refreshInterval: 60000 }
+    { refreshInterval: 43200000, revalidateOnFocus: false }
   );
 
   return (

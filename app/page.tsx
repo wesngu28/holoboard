@@ -12,11 +12,17 @@ export default function Chart() {
 
   const { data, error } = useSWR("get lives",
     async () => {
-      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/tracker`, { cache: "no-cache" });
+      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/tracker`, {
+        method: "POST",
+        headers: {
+        "x-api-key": process.env.HOLODEX_API!,
+        },
+        body: JSON.stringify(channels.map(channel => channel.id))
+      });
       const infosJson: VideoStatus[] = await infos.json();
       return infosJson;
     },
-    { refreshInterval: 43200000 }
+    { refreshInterval: 1200000, revalidateOnFocus: false }
   );
 
   return (

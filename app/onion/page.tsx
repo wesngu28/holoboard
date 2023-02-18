@@ -7,11 +7,11 @@ import Header from "./Header";
 export default function Onion() {
   const { data, error } = useSWR('get aqua',
     async () => {
-      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/onion`, { cache: "no-cache" });
+      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/onion`);
       const infosJson = await infos.json();
       return infosJson;
     },
-    { refreshInterval: 60000 }
+    { refreshInterval: 1200000, revalidateOnFocus: false }
   );
   return (
     <main className="p-2 min-h-screen flex-1 flex flex-col items-center bg-gradient-to-br from-[#FDC8EA] to-[#E99ED2]">
