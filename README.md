@@ -4,7 +4,7 @@ Third-party viewer and live tracker for the Hololive and Holostars English membe
 
 I made Holoboard to learn about some of the new features that Vercel implemented in Next.js, including server and client components.
 
-<img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white"> <img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white"> <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"> <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white"> <img src="https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white">
+<img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white"> <img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white"> <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"> <img src="https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white">
 
 ## Running Locally
 
@@ -24,10 +24,12 @@ NEXT_PUBLIC_DOMAIN=localhost
 
 ## 💻 Technologies
 
-- Next.js: a JavaScript framework for building server-rendered or statically-exported applications using React. Using the backend server layer provided by their apis, I am able to run cronjobs that update an in-memory data store through a Next.js backend.
+- Next.js: a JavaScript framework for building server-rendered or statically-exported applications using React.
 - Tailwind: a CSS utility class library to quicken and bootstrap development of appealing and accessible websites.
 - Chart.js: A Javascript library for making beautiful and customizable data visualizations.
 
 ## Notes
 
-An older rendition of this project used useContext, but I have since swapped it for just lifting state up. I ran into issues with the "Cannot access ambient const enums when the '--isolatedModules' flag is provided." error, so was only able
+An older rendition of this project used useContext, but I have since swapped it for just lifting state up.
+
+A concern of mine is overloading the great Holodex API with too many requests in the event someone decided to spam refresh on this site. I tried using cronjobs on the serverside but since serverside routes are not active as they are event driven, this does not work. Another option for data storage would have been to store them in a Firestore or Supabase postgres database, but ultimately neither of these would also alleviate the issue and could make it worse since my free tier on these databases would be at risk as well.
