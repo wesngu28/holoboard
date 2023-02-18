@@ -24,6 +24,7 @@ NEXT_PUBLIC_DOMAIN=localhost
 
 ## 💻 Technologies
 
+- React: a Javascript framework for making interactive user applications and experiences.
 - Next.js: a JavaScript framework for building server-rendered or statically-exported applications using React.
 - Tailwind: a CSS utility class library to quicken and bootstrap development of appealing and accessible websites.
 - Chart.js: A Javascript library for making beautiful and customizable data visualizations.
