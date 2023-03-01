@@ -10,7 +10,13 @@ interface Props { setVid: (video: VideoStatus) => void}
 export function Channels({setVid}: Props) {
   const { data, error } = useSWR("get channel",
     async () => {
-      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/tracker`, { cache: "no-cache" });
+      const infos = await fetch(`${process.env.NEXT_PUBLIC_SITE}/api/tracker`, {
+        method: "POST",
+        headers: {
+        "x-api-key": process.env.HOLODEX_API!,
+        },
+        body: JSON.stringify(channels.map(channel => channel.id))
+      });
       const infosJson: VideoStatus[] = await infos.json();
       return infosJson;
     },
