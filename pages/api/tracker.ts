@@ -43,7 +43,7 @@ export const getLastVideo = async (id: string) => {
     }
   );
   const latestVideoJson = await latestVideo.json();
-  return latestVideoJson[0].id;
+  return latestVideoJson[0]?.id ?? null;
 };
 
 export async function getLiveData(channels: string[]): Promise<VideoStatus[]> {
@@ -76,11 +76,7 @@ export async function getLiveData(channels: string[]): Promise<VideoStatus[]> {
 }
 
 const liveData = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
     res.status(200).json(await getLiveData(JSON.parse(req.body)));
-  } catch(err) {
-    res.status(500).send("Failed to load data");
-  }
 };
 
 export default liveData;
