@@ -26,7 +26,7 @@ export function Channels({setVid}: Props) {
   return (
     !data ? <h2 className="text-lg font-semibold mt-4">Fetching data...</h2>
     : error ? <h2 className="text-lg font-semibold mt-4">Failed to fetch information</h2>
-    : <div className={`grid grid-cols-6 xs:grid-cols-8 md:grid-cols-10 lg:grid-cols-11 max-w-6xl absolute bottom-4`}>
+    : <div className={`grid grid-cols-6 xs:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 max-w-6xl max-h-48 absolute bottom-4`}>
       {channels.map((channel: ChannelObj, i: number) => {
         let channelData = data.filter(status => status.id === channel.id)[0]
         return(

@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
-  const checkboxIds = useMemo(() => ['Hololive EN', 'Holostars EN', 'Myth', 'CouncilRys', 'Tempus Wave 1', 'Tempus Wave 2'], []);
+  const checkboxIds = useMemo(() => ['Hololive EN', 'Holostars EN', 'Myth', 'CouncilRys', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent'], []);
   const checkboxes = useRef<HTMLInputElement[]>([]);
   const [allChecked, setAllChecked] = useState(false);
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
   function selectAll() {
     setAllChecked(!allChecked);
     const newSet = allChecked
-      ? new Set(['Myth', 'CouncilRys', 'Tempus Wave 1', 'Tempus Wave 2'])
+      ? new Set(['Myth', 'CouncilRys', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent'])
       : new Set([]);
     onCheckBox(newSet);
     for (let i = 0; i < checkboxIds.length; i++) {
@@ -30,7 +30,7 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
   function handleCheck(e: ChangeEvent<HTMLInputElement>) {
     let addable = new Set([e.target.id])
     if (e.target.id === 'Hololive EN') {
-      addable = new Set(['Myth', 'CouncilRys'])
+      addable = new Set(['Myth', 'CouncilRys', 'Advent'])
       checkboxes.current[2].checked = e.target.checked
       checkboxes.current[3].checked = e.target.checked
     }

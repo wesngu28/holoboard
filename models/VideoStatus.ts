@@ -9,8 +9,8 @@ export interface SubStatus {
   id: string;
   name: string,
   group: string,
-  thumbnail: string;
-  color: string;
+  thumbnail?: string;
+  color?: string;
   subs: number;
   view_count: number;
   video_count: number;
