@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { client } from "./client";
 import { VideoStatus } from "../../models/VideoStatus";
 
 export const getNearestStream = async (id: string) => {
@@ -7,7 +6,7 @@ export const getNearestStream = async (id: string) => {
     `https://holodex.net/api/v2/videos?channel_id=${id}&status=upcoming&type=stream&max_upcoming_hours=48`,
     {
       headers: {
-        "x-api-key": process.env.HOLODEX_API!,
+        "X-APIKEY": process.env.HOLODEX_API!,
       },
     }
   );
@@ -38,19 +37,26 @@ export const getLastVideo = async (id: string) => {
     `https://holodex.net/api/v2/videos?channel_id=${id}&status=past&type=stream`,
     {
       headers: {
-        "x-api-key": process.env.HOLODEX_API!,
+        "X-APIKEY": process.env.HOLODEX_API!,
       },
     }
   );
   const latestVideoJson = await latestVideo.json();
+  console.log(latestVideoJson)
   return latestVideoJson[0]?.id ?? null;
 };
 
 export async function getLiveData(channels: string[]): Promise<VideoStatus[]> {
-  const liveUpcomingVideos = await client.getLiveVideosByChannelId(channels)
+  const channelIds = channels.join(',')
+  const liveUpcomingVideos = await fetch(`https://holodex.net/api/v2/users/live?channels=${channelIds}`, {
+    headers: {
+      "X-APIKEY": process.env.HOLODEX_API!
+    }
+  })
+  const lives: Array<any> = await liveUpcomingVideos.json()
   const renderedDataArray = [] as VideoStatus[]
   for (const channel of channels) {
-    const thisLiveUpcoming = liveUpcomingVideos.filter(videos => videos.channelId === channel)
+    const thisLiveUpcoming = lives.filter(videos => videos.channel.id === channel)
     const hasLiveStatus = thisLiveUpcoming.find(video => video.status === 'live');
     const vsChannel = { id: channel } as VideoStatus
     if (hasLiveStatus) {

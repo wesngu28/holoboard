@@ -10,28 +10,25 @@
     "test:dep": "updates --update ./"
   },
   "dependencies": {
-    "@types/node": "18.13.0",
-    "@types/react": "18.0.27",
-    "@types/react-dom": "18.0.10",
-    "chart.js": "^4.2.1",
-    "cron": "^2.2.0",
-    "eslint": "8.33.0",
-    "eslint-config-next": "13.1.6",
-    "fast-average-color": "^9.3.0",
-    "fast-average-color-node": "^2.6.0",
-    "holodex.js": "^2.0.5",
-    "next": "13.1.6",
+    "chart.js": "^4.4.1",
+    "fast-average-color": "^9.4.0",
+    "fast-average-color-node": "^2.7.0",
+    "next": "14.1.0",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
-    "sharp": "^0.31.3",
-    "swr": "^2.0.3",
-    "typescript": "4.9.5"
+    "sharp": "^0.33.2",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
-    "@types/cron": "^2.0.0",
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.6"
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "autoprefixer": "^10.4.17",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "5.3.3"
   }
 }

@@ -1,17 +1,24 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { client } from "./client";
 import db from "../../assets/db.json"
 import { getAverageColor } from "fast-average-color-node";
 
 async function getSubData() {
   try {
-    const promises = db.map(channel => client.getChannel(channel.id));
+    const promises = db.map( async (channel) => {
+      const liveUpcomingVideos = await fetch(`https://holodex.net/api/v2/channels/${channel.id}`, {
+        headers: {
+          "X-APIKEY": process.env.HOLODEX_API!
+        }
+      })
+      return await liveUpcomingVideos.json()
+    });
     const liveUpcomingVideos = await Promise.all(promises);
+    console.log(liveUpcomingVideos)
     liveUpcomingVideos.forEach( async (live, index) => {
       try {
-        db[index].subs = live.subscriberCount;
-        db[index].view_count = live.viewCount;
-        db[index].video_count = live.videoCount;
+        db[index].subs = live.subscriber_count;
+        db[index].view_count = live.view_count;
+        db[index].video_count = live.video_count;
         if (!db[index].thumbnail) {
           db[index].thumbnail = live.avatarUrl.replace('800', '88')
           const dominant = await getAverageColor(db[index].thumbnail.replace('-c-k-c0x00ffffff-no-rj', ''), { algorithm: 'simple' })

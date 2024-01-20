@@ -1,16 +1,22 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { client } from "./client";
 import { getLastVideo, getNearestStream } from "./tracker";
 
 async function farm_onions() {
   try {
     const akutan = { id: "UC1opHUrw8rvnsadT-iGp7Cg", status: "", video: "", time: "", type: "stream" }
-    const liveUpcomingVideos = await client.getLiveVideosByChannelId([akutan.id])
-    const thisLiveUpcoming = liveUpcomingVideos.filter(videos => videos.channelId === akutan.id)
-    const hasLiveStatus = thisLiveUpcoming.find(video => video.status === 'live');
+    const liveUpcomingVideos = await fetch(`https://holodex.net/api/v2/channels/${akutan.id}/videos`, {
+      headers: {
+        "X-APIKEY": process.env.HOLODEX_API!
+      }
+    })
+    const lives: Array<any> = await liveUpcomingVideos.json()
+    const thisLiveUpcoming = lives.filter(videos => videos.channel.id === akutan.id)
+    const hasLiveStatus = thisLiveUpcoming.find(video => {
+      return video.status === 'live'
+    });
     if (hasLiveStatus) {
       akutan.status = "live";
-      akutan.video = hasLiveStatus.videoId;
+      akutan.video = hasLiveStatus.video_id;
       return akutan;
     }
     const checkUpcoming = await getNearestStream(akutan.id);
@@ -21,6 +27,7 @@ async function farm_onions() {
       return akutan;
     }
     const lastVideo = await getLastVideo(akutan.id);
+    console.log(lastVideo)
     if (lastVideo) {
       akutan.status = "offline";
       akutan.video = lastVideo;
