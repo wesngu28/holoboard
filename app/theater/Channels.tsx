@@ -1,7 +1,7 @@
 "use client"
 
 import { ChannelObj } from '../../models/Channel'
-import channels from '../../assets/holoen.json'
+import channels from '../../assets/db.json'
 import useSWR from 'swr'
 import { VideoStatus } from '../../models/VideoStatus'
 import Image from 'next/image'
@@ -15,9 +15,10 @@ export function Channels({setVid}: Props) {
         headers: {
         "x-api-key": process.env.HOLODEX_API!,
         },
-        body: JSON.stringify(channels.map(channel => channel.id))
+        body: JSON.stringify(channels.filter(channel => !channel.graduated).map(channel => channel.id))
       });
       const infosJson: VideoStatus[] = await infos.json();
+      console.log(infosJson)
       return infosJson;
     },
     { refreshInterval: 60000 }
@@ -26,8 +27,8 @@ export function Channels({setVid}: Props) {
   return (
     !data ? <h2 className="text-lg font-semibold mt-4">Fetching data...</h2>
     : error ? <h2 className="text-lg font-semibold mt-4">Failed to fetch information</h2>
-    : <div className={`grid grid-cols-6 xs:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 max-w-6xl max-h-48 absolute bottom-4`}>
-      {channels.map((channel: ChannelObj, i: number) => {
+    : <div className={`flex flex-wrap max-w-6xl max-h-48 absolute bottom-4`}>
+      {channels.filter(channel => !channel.graduated).map((channel: ChannelObj, i: number) => {
         let channelData = data.filter(status => status.id === channel.id)[0]
         return(
           <div key={channel.id}>
@@ -47,7 +48,7 @@ export function Channels({setVid}: Props) {
               }
               src={`/${channel.name}.jpg`}
               alt={channel.name}
-              width={800} height={800}
+              width={80} height={80}
             />
           </div>
         )

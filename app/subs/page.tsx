@@ -9,7 +9,7 @@ import db from "../../assets/db.json"
 
 export default function Chart() {
   const [graphfilter, setGraphfilter] = useState("subs");
-  const [groupfilter, setGroupfilter] = useState(new Set<string>(['Myth', 'CouncilRys', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent']))
+  const [groupfilter, setGroupfilter] = useState(new Set<string>(['Myth', 'Promise', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent', 'Armis', 'Justice']))
   const handleCheckBox = (newSet: Set<string>) => {
     setGroupfilter(newSet)
   }
@@ -32,7 +32,7 @@ export default function Chart() {
     <main className="p-2 min-h-screen flex-1 flex flex-col items-center justify-center">
       {!data ? <div className="w-full sm:max-w-xl lg:max-w-3xl xl:max-w-6xl">
         <GraphFilter onChange={handleGraphOptionChange} onCheckBox={handleCheckBox} setProp={groupfilter}/>
-        <div className="h-[1250px] mt-4 p-4 bg-gray-900 rounded-lg shadow flex flex-col justify-center relative">
+        <div className="h-[2000px] mt-4 p-4 bg-gray-900 rounded-lg shadow flex flex-col justify-center relative">
           <LicensedBar
             filter={graphfilter}
             datas={
@@ -53,7 +53,7 @@ export default function Chart() {
       : error ? <h2 className="text-lg font-semibold mt-4">Failed to fetch information</h2>
       : <div className="w-full sm:max-w-xl lg:max-w-3xl xl:max-w-6xl">
         <GraphFilter onChange={handleGraphOptionChange} onCheckBox={handleCheckBox} setProp={groupfilter}/>
-        <div className="h-[1250px] mt-4 p-4 bg-gray-900 rounded-lg shadow flex flex-col justify-center relative">
+        <div className="h-[2000px] mt-4 p-4 bg-gray-900 rounded-lg shadow flex flex-col justify-center relative">
           <LicensedBar
             filter={graphfilter}
             datas={

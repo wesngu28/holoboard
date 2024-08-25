@@ -5,7 +5,7 @@ import { VideoStatus } from "../models/VideoStatus";
 import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
-import channels from "../assets/holoen.json";
+import channels from "../assets/db.json";
 import Livecols from "./LiveCols";
 
 export default function Chart() {

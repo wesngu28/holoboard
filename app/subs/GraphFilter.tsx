@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
-  const checkboxIds = useMemo(() => ['Hololive EN', 'Holostars EN', 'Myth', 'CouncilRys', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent'], []);
+  const checkboxIds = useMemo(() => ['Hololive EN', 'Holostars EN', 'Myth', 'Promise', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent', 'Armis', 'Justice'], []);
   const checkboxes = useRef<HTMLInputElement[]>([]);
   const [allChecked, setAllChecked] = useState(false);
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
   function selectAll() {
     setAllChecked(!allChecked);
     const newSet = allChecked
-      ? new Set(['Myth', 'CouncilRys', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent'])
+      ? new Set(['Myth', 'Promise', 'Tempus Wave 1', 'Tempus Wave 2', 'Advent', 'Armis', 'Justice'])
       : new Set([]);
     onCheckBox(newSet);
     for (let i = 0; i < checkboxIds.length; i++) {
@@ -30,7 +30,7 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
   function handleCheck(e: ChangeEvent<HTMLInputElement>) {
     let addable = new Set([e.target.id])
     if (e.target.id === 'Hololive EN') {
-      addable = new Set(['Myth', 'CouncilRys', 'Advent'])
+      addable = new Set(['Myth', 'Promise', 'Advent', 'Justice'])
       checkboxes.current[2].checked = e.target.checked
       checkboxes.current[3].checked = e.target.checked
     }
@@ -38,7 +38,7 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
       checkboxes.current[0].checked = checkboxes.current[2].checked
     }
     if (e.target.id === 'Holostars EN') {
-      addable = new Set(['Tempus Wave 1', 'Tempus Wave 2'])
+      addable = new Set(['Tempus Wave 1', 'Tempus Wave 2', 'Armis'])
       checkboxes.current[4].checked = e.target.checked
       checkboxes.current[5].checked = e.target.checked
     }
@@ -68,7 +68,9 @@ export default function GraphFilter({ onChange, onCheckBox, setProp }: Props) {
         {checkboxIds.map((cb, i)=> {
           return(
             <div key={cb}>
-              <input ref={el => checkboxes.current[i] = el!} type="checkbox" onChange={(e) => handleCheck(e)} id={cb} />
+              <input ref={el => {
+                checkboxes.current[i] = el!
+              }} type="checkbox" onChange={(e) => handleCheck(e)} id={cb} />
               <label className="mx-2" htmlFor={cb}>{cb}</label>
             </div>
           )

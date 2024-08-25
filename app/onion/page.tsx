@@ -16,7 +16,7 @@ export default function Onion() {
   return (
     <main className="p-2 min-h-screen flex-1 flex flex-col items-center bg-gradient-to-br from-[#FDC8EA] to-[#E99ED2]">
       <div className="max-w-xl flex flex-col items-center">
-        <h1 className="text-[#865C79] text-5xl font-bold tracking-tight mt-4 text-wrap">Akukin</h1>
+        <h1 className="text-[#865C79] text-5xl font-bold tracking-tight mt-4 text-wrap">Thank You Aqua</h1>
         <Header />
         <a href="https://www.youtube.com/@MinatoAqua"><Image alt={"onion aqua maid"} src={onion} /></a>
         {!data ? <h2 className="text-lg font-semibold mt-4">Fetching data...</h2>
